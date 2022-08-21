@@ -43,10 +43,10 @@ def callback_worker(call):
     callback = call
     if callback.data == "yes":
         bot.send_message(callback.message.chat.id, "Отлично, жди оповещения. \nЕсли передумал, зайди в /settings")
-        smessage.add_chat(chats, str(callback.message.chat.id), chats)
+        smessage.add_chat(chats, str(callback.message.chat.id))
     elif callback.data == "no":
         bot.send_message(callback.message.chat.id, 'Не очень и хотелось :с \nЕсли передумал, зайди в /settings ')
-        smessage.del_chat(chats, str(callback.message.chat.id), chats)
+        smessage.del_chat(chats, str(callback.message.chat.id))
 
 
 rt = RepeatedTimer(60, smessage.send_notification, bot, chats)
