@@ -1,4 +1,6 @@
+import datetime
 import telebot
+import logging
 
 import config
 
@@ -7,8 +9,13 @@ from utils.FileUtils import openFile, writeFile
 
 import utils.MessageUtils as smessage
 
+
 bot = telebot.TeleBot(config.token)
 chats = openFile(config.dataSet)
+
+logname = f"logs/{datetime.datetime.now().date().month}-{datetime.datetime.now().date().day}-{datetime.datetime.now().hour}-{datetime.datetime.now().minute}.log"
+logging.basicConfig(filename=logname, filemode='w', level=logging.INFO, format='%(asctime)s: %(levelname)s - %(message)s', encoding='utf-8')
+logging.getLogger().addHandler(logging.StreamHandler())
 
 
 @bot.message_handler(commands=['start'])
@@ -17,7 +24,7 @@ def send_welcome(message):
     bot.send_message(message.from_user.id, "Привет, этот бот для напоминаний")
     smessage.make_button(bot, message)
     chats.update({str(message.from_user.id): False})
-    print(f"Новый пользователь - {message.from_user.id}")
+    logging.info(f"User {message.from_user.id} enter /start")
     writeFile(config.dataSet, chats)
 
 
@@ -27,7 +34,7 @@ def start_in_group(message):
     if message.text == "Котик шпротик":
         bot.send_message(message.chat.id, 'сернур')
         chats.update({message.chat.id: True})
-        print(f"Группа {message.chat.id} добавлена в очередь")
+        logging.info(f"Group {message.chat.id} added in list")
         writeFile(config.dataSet, chats)
 
 
